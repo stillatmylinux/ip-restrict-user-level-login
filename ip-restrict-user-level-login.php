@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class IP_Restrict_User_Level_Login {
 	private $user_level = 'shop';
-	private $allowed_IPs = array('50.80.27.89', '127.0.0.1');
+	private $allowed_IPs = array('192.168.1.12', '127.0.0.1');
 
 	private static $instance;
 
