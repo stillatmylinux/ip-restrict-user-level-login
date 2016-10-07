@@ -27,8 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 class IP_Restrict_User_Level_Login {
+
+	// TODO: add admin page for these settings
 	private $user_level = 'shop';
-	private $allowed_IPs = array('192.168.1.12', '127.0.0.1');
+	private $allowed_IPs = array('192.168.1.12');
 
 	private static $instance;
 
@@ -59,7 +61,7 @@ class IP_Restrict_User_Level_Login {
 	 * @return      null
 	 */
 	public function hooks() {
-		add_action( 'wp_login', array( $this, 'verify_user_level_login') );
+		add_action( 'wp_login', array( $this, 'verify_user_level_login' ), 10, 2 );
 	}
 
 	/**
@@ -69,7 +71,7 @@ class IP_Restrict_User_Level_Login {
 	 * @since       1.0.0
 	 * @return      null
 	 */
-	public function get_ip_address_address(){
+	public function get_ip_address() {
 		foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
 			if (array_key_exists($key, $_SERVER) === true){
 				foreach (explode(',', $_SERVER[$key]) as $ip){
@@ -90,10 +92,9 @@ class IP_Restrict_User_Level_Login {
 	 * @since       1.0.0
 	 * @return      null
 	 */
-	public function verify_user_level_login() {
-		$user_info = wp_get_current_user();
+	public function verify_user_level_login( $user_login, $user ) {
 
-		if( isset( $user_info->wp_capabilities[$this->user_level] ) && $user_info->wp_capabilities[$this->user_level] ) {
+		if( isset( $user, $user->roles ) && in_array( $this->user_level, $user->roles ) ) {
 
 			if( ! in_array( $this->get_ip_address(), $this->allowed_IPs ) ) {
 				wp_logout();
