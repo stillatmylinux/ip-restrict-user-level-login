@@ -26,6 +26,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+if ( ! defined( 'IRULL_PLUGIN_DIR' ) ) {
+	define( 'IRULL_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+}
+
 class IP_Restrict_User_Level_Login {
 
 	// TODO: add admin page for these settings
@@ -47,6 +51,7 @@ class IP_Restrict_User_Level_Login {
 	public static function instance() {
 		if( ! self::$instance ) {
 			self::$instance = new IP_Restrict_User_Level_Login();
+			self::$instance->includes();
 			self::$instance->hooks();
 		}
 
@@ -62,6 +67,10 @@ class IP_Restrict_User_Level_Login {
 	 */
 	public function hooks() {
 		add_action( 'wp_login', array( $this, 'verify_user_level_login' ), 10, 2 );
+	}
+
+	public function includes() {
+		// include_once( IRULL_PLUGIN_DIR . 'includes/admin.php' );
 	}
 
 	/**
